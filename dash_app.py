@@ -18,10 +18,7 @@ in git-bash: cd /c/Users/kanghosh.ORADEV/.virtualenvs/BILogAnalyzer-g2FLMzg_/Scr
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly, dash_renderer
-
-# import openpyxl   ## being used internally to write the pandas dataframe to an excel workbook
-# import pysocks    ## being used by requests to use the socks proxy
+# import plotly, dash_renderer
 
 # Local application imports
 import obis_query_parser
