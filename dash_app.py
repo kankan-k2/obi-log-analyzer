@@ -18,6 +18,7 @@ in git-bash: cd /c/Users/kanghosh.ORADEV/.virtualenvs/BILogAnalyzer-g2FLMzg_/Scr
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_table as dt
 # import plotly, dash_renderer
 
 # Local application imports
@@ -26,6 +27,8 @@ from logfile_parser import logger
 
 
 """ ****************************** START OF CODE ****************************** """
+
+psql_trigger_df, psql_only_df = obis_query_parser.split_psql_df()
 
 def generate_table(dataframe, max_rows=50):
     logger.debug("Generate an HTML table using the dataframe passed to dash")
@@ -47,8 +50,10 @@ app = dash.Dash("BI Log Analyzer", external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children=[
     html.H1(children='BI Log Analyzer'),
-    html.H4(children='Physical SQLs from nqquery.log'),
-    generate_table(obis_query_parser.generate_psql_df())
+    html.H3(children='Physical SQLs trigger log messages from nqquery.log'),
+    generate_table(psql_trigger_df),
+    html.H3(children='Individual Physical SQLs from nqquery.log'),
+    generate_table(psql_only_df)
 ])
 
 if __name__ == '__main__':

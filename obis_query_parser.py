@@ -38,7 +38,7 @@ psql_regex = re.compile(r"^\[((?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|
 
 # ('2014-05-27T19:24:20.764-04:00', '004yabypLcr8XrP5If^Ayf0003Xu00003H,0', '475bb940', 'f2c80002', 'f2c80000', 'weblogic', 'Oracle Data Warehouse', '267809', '19859160', '63a9f3fa', 'select distinct T41656.GL_ACCOUNT_CAT_CODE as c1, T41656.GL_ACCOUNT_CAT_NAME as c2 from W_GL_GROUP_ACCOUNT_D T41656 /* Dim_W_GL_GROUP_ACCOUNT_D */ order by c1, c2')
 # psql_data = namedtuple("psql_data", ["datetime" ,"ecid" ,"threadId" ,"requestId" ,"sessionId" ,"username" ,"dbName" ,"dbId" ,"lsqlRequestHash" ,"psqlRequestHash" ,"psql"])
-psql_data = namedtuple("psql_data", "datetime ecid threadId requestId sessionId username dbName dbId lsqlRequestHash psqlRequestHash psql")
+psql_data = namedtuple("psql_data_1", "datetime ecid threadId requestId sessionId username dbName dbId lsqlRequestHash psqlRequestHash psql")
 
 """ 
 psql_df = pd.DataFrame()
@@ -67,7 +67,29 @@ def generate_psql_df():
             # psql_df.append(row)
     return psql_df
 
+""" 
 print(generate_psql_df())
 print("\n")
+"""
+
+def split_psql_df():
+    psql_df = generate_psql_df()
+    logger.info(f"Displaying the generated raw Physical SQL Dataframe")
+    logger.info(psql_df)
+    psql_only_df = psql_df[['psqlRequestHash','psql']].copy()
+    psql_df.drop('psql', axis=1, inplace=True)
+
+    logger.info(f"Displaying the modified Physical SQL Dataframe")
+    logger.info(psql_df)
+    logger.info(f"Displaying the new Physical SQL Only Dataframe with any duplicates")
+    logger.info(psql_only_df)
+
+    return psql_df, deduplicate_df(psql_only_df)
+
+
+def deduplicate_df(df):
+    df.drop_duplicates(keep='first', inplace=True)
+
+    return df
 
 
