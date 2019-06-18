@@ -49,42 +49,54 @@ filepath = "NQQuery_OAC.log"
             break
  """
 
-def one_log_line(filepath):
-    date_regex = re.compile(r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]", re.I)
+def one_log_line(filepath, line_start_identifier):
+    # date_regex = re.compile(r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]", re.I)
+    date_regex = re.compile(line_start_identifier, re.I)
+        
     with open(filepath) as nqquery:
+
         for line in nqquery:
             line = line.strip()
             m_line = date_regex.match(line)
+
             if m_line:
                 yield a_date, line
             else:
                 yield other, line
+
     yield EOF, ''
 
 
-def one_log_msg():
+def one_log_msg(line_start_identifier):
     complete_log_msg = []
     # count = 0
-    for kind, content in one_log_line(filepath):
+
+    for kind, content in one_log_line(filepath, line_start_identifier):
         logger.debug(f"*****inside for loop*****\nkind: {kind}")
         # logger.debug(f"Count: {count}\n")
+
         # if count > 10:
         #     logger.warning(f"Specified Count limit of {count-1} reached.\n")
         #     break
+
         if kind in [a_date, EOF]:
             logger.debug(f"**inside if 'kind' block**\n1 complete log message list:\n{complete_log_msg}\n")
+            
             if complete_log_msg != []:
                 logger.info("Joined the elements of complete_log_msg list: " + " ".join(complete_log_msg) + "\n")
                 # print("Output to stdout: \n" + " ".join(complete_log_msg) + "\n")
                 yield " ".join((complete_log_msg))
+
             complete_log_msg = [content]
             logger.debug(f"new complete log message from if 'kind' block: {complete_log_msg}\n")
             # count += 1
             # logger.debug("Count incremented by 1\n")
+
         else:
             logger.debug("**inside else block**\nAdded new content")
             complete_log_msg.append(content)
             logger.debug(f"Complete log message list after appending new content: {complete_log_msg}\n")
+            
         logger.debug("==================== End of a for-loop iteration ====================\n")
 
 

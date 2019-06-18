@@ -50,8 +50,9 @@ app = dash.Dash("BI Log Analyzer", external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children=[
     html.H1(children='BI Log Analyzer'),
-    html.H3(children='Physical SQLs trigger log messages from nqquery.log'),
+    html.H3(children='Physical SQLs trigger/request log messages from nqquery.log'),
     generate_table(psql_trigger_df),
+    "\n",
     html.H3(children='Individual Physical SQLs from nqquery.log'),
     generate_table(psql_only_df)
 ])
