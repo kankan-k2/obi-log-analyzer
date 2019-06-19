@@ -21,7 +21,7 @@ import dash_table as dt
 # import plotly, dash_renderer
 
 # Local application imports
-import obis_query_parser
+import obis_querylog_parser
 from logfile_parser import logger
 
 
