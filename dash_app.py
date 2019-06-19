@@ -27,7 +27,7 @@ from logfile_parser import logger
 
 """ ****************************** START OF CODE ****************************** """
 
-psql_trigger_df, psql_only_df = obis_query_parser.split_psql_df(obis_query_parser.psql_request_regex)
+psql_trigger_df, psql_only_df = obis_querylog_parser.split_psql_df(obis_querylog_parser.psql_request_regex)
 
 def generate_table(dataframe, max_rows=50):
     logger.debug("Generate an HTML table using the dataframe passed to dash")
