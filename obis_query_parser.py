@@ -55,12 +55,12 @@ print(psql_df)
 print("\n")
 """
 
-def generate_psql_df():
+def generate_psql_df(regex):
     count = 0
 
     for line in logfile_parser.one_log_msg(obisquerylog_line_start):
         logger.debug(f"Log message read: {line}")
-        psql_match = psql_request_regex.match(line)
+        psql_match = regex.match(line)
 
         if psql_match:
             count += 1
@@ -92,8 +92,8 @@ def deduplicate_df(df):
     return df
 
 
-def split_psql_df():
-    psql_df = generate_psql_df()
+def split_psql_df(regex):
+    psql_df = generate_psql_df(regex)
     logger.info(f"Displaying the generated raw Physical SQL Dataframe")
     logger.info(psql_df)
     psql_only_df = psql_df[['psqlRequestHash','psql']].copy()

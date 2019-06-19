@@ -28,7 +28,7 @@ from logfile_parser import logger
 
 """ ****************************** START OF CODE ****************************** """
 
-psql_trigger_df, psql_only_df = obis_query_parser.split_psql_df()
+psql_trigger_df, psql_only_df = obis_query_parser.split_psql_df(obis_query_parser.psql_request_regex)
 
 def generate_table(dataframe, max_rows=50):
     logger.debug("Generate an HTML table using the dataframe passed to dash")
@@ -52,7 +52,7 @@ app.layout = html.Div(children=[
     html.H1(children='BI Log Analyzer'),
     html.H3(children='Physical SQLs trigger/request log messages from nqquery.log'),
     generate_table(psql_trigger_df),
-    "\n",
+    html.Br(),
     html.H3(children='Individual Physical SQLs from nqquery.log'),
     generate_table(psql_only_df)
 ])
