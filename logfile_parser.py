@@ -1,6 +1,7 @@
 """
 This script reads a log file with multiline log messages using a specific datetime pattern identifier
-and spills out 1 log message at a time
+and spills out 1 log message at a time. It's a base logfile parser to be used by all the other BI specific
+log file parsers
 
 @author: kanghosh
 

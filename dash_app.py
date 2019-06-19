@@ -1,6 +1,5 @@
 """
-This script fetches the count of key errors from elasticsearch and translates all the data into a Pandas dataframe
-and then inserts into an Oracle Database table
+This script reads the Pandas dataframe passed by obis_querylog_parser.py and visualizes them accordingly
 
 @author: kanghosh
 

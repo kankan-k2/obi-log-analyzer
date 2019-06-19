@@ -1,6 +1,6 @@
 """
 This script parses the nqquery.log file and captures all the data into a Pandas dataframe
-and then inserts into an Oracle Database table
+and which is then passed on to the dash app for visualization
 
 @author: kanghosh
 
