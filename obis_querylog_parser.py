@@ -23,14 +23,10 @@ import pandas as pd
 # import openpyxl   ## being used internally to write the pandas dataframe to an excel workbook
 # import pysocks    ## being used by requests to use the socks proxy
 
-# Local application imports
-import logfile_parser
-from logfile_parser import logger
 
 print(pd.__version__)
 
 
-""" ****************************** START OF CODE ****************************** """
 
 # [2014-05-27T19:24:20.764-04:00]
 obisquerylog_line_start = r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]"

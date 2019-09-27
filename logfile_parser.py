@@ -18,12 +18,8 @@ import re
 import logging
 
 # Third party imports
-
 # import openpyxl   ## being used internally to write the pandas dataframe to an excel workbook
 # import pysocks    ## being used by requests to use the socks proxy
-
-# Local application imports
-
 
 
 """ ****************************** START OF CODE ****************************** """
@@ -31,9 +27,6 @@ import logging
 logging.basicConfig(level='DEBUG', format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# logger.setLevel(logging.DEBUG)
-# logger.setLevel(logging.INFO)
-logger.setLevel(logging.CRITICAL)
 
 a_date, other, EOF = 0, 1, 2
 
