@@ -12,6 +12,10 @@ in git-bash: cd /c/Users/kanghosh.ORADEV/.virtualenvs/BILogAnalyzer-g2FLMzg_/Scr
 
 """ ****************************** ALL IMPORTS ****************************** """
 
+# Local application imports
+import custom_logging
+import logfile_parser
+
 # Standard library imports
 import re
 import logging
@@ -24,8 +28,11 @@ import pandas as pd
 # import pysocks    ## being used by requests to use the socks proxy
 
 
-print(pd.__version__)
+""" ****************************** START OF CODE ****************************** """
 
+# Set up the logger using the defaults
+custom_logging.setup_logging()
+logger = logging.getLogger(__name__)
 
 
 # [2014-05-27T19:24:20.764-04:00]
@@ -51,7 +58,11 @@ print(psql_df)
 print("\n")
 """
 
+logger.info(f"Pandas library version used: {pd.__version__}")
+
 def generate_psql_df(regex):
+
+    logger.info(f"Generating Physical SQL dataframe.")
     count = 0
 
     for line in logfile_parser.one_log_msg(obisquerylog_line_start):
@@ -68,13 +79,14 @@ def generate_psql_df(regex):
 
             if count == 1:
                 psql_df = pd.DataFrame(columns=row._fields)
-                logger.debug(f"the count is {count}")
+                logger.debug(f"The count is {count}")
                 logger.debug(f"Dataframe created with following columns: \n{psql_df}\n")
 
             psql_df.loc[len(psql_df)] = list(row)
             # psql_df.append(list(row), ignore_index=True)
             # psql_df.append(row)
 
+    logger.info(f"Generated Physical SQL dataframe successfully.")
     return psql_df
 
 """ 
@@ -83,23 +95,30 @@ print("\n")
 """
 
 def deduplicate_df(df):
+
+    logger.info(f"Removing duplicates from the generated dataframe")
     df.drop_duplicates(keep='first', inplace=True)
 
     return df
 
 
 def split_psql_df(regex):
+
+    logger.info(f"Returning 2 split dataframes from the original generateed dataframe")
+
     psql_df = generate_psql_df(regex)
-    logger.info(f"Displaying the generated raw Physical SQL Dataframe")
-    logger.info(psql_df)
+    logger.debug(f"Displaying the generated raw Physical SQL Dataframe: \n{psql_df}")
+    # logger.debug(psql_df)
     psql_only_df = psql_df[['psqlRequestHash','psql']].copy()
     psql_df.drop('psql', axis=1, inplace=True)
 
-    logger.info(f"Displaying the modified Physical SQL Dataframe")
-    logger.info(psql_df)
-    logger.info(f"Displaying the new Physical SQL Only Dataframe with any duplicates")
-    logger.info(psql_only_df)
+    logger.debug(f"Displaying the modified Physical SQL Dataframe: \n{psql_df}")
+    # logger.info(psql_df)
+    logger.debug(f"Displaying the new Physical SQL Only Dataframe with any duplicates: \n{psql_only_df}")
+    # logger.info(psql_only_df)
 
     return psql_df, deduplicate_df(psql_only_df)
 
+
+psql_trigger_df, psql_only_df = split_psql_df(psql_request_regex)
 
