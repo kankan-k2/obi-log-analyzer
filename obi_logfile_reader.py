@@ -1,5 +1,5 @@
 """
-This script reads a log file with multiline log messages using a specific datetime pattern identifier
+This script reads a OBI log file with multiline log messages using a specific datetime pattern identifier
 and spills out 1 log message at a time. It's a base logfile parser to be used by all the other BI specific
 log file parsers
 
@@ -17,6 +17,7 @@ in git-bash: cd /c/Users/kanghosh.ORADEV/.virtualenvs/BILogAnalyzer-g2FLMzg_/Scr
 import custom_logging
 
 # Standard library imports
+from pathlib import Path
 import re
 import logging
 
@@ -35,10 +36,10 @@ logger = logging.getLogger(__name__)
 # Setting up codes for lines starting with a date, other lines and End-Of-File
 a_date, other, EOF = 0, 1, 2
 
-filepath = "NQQuery_OAC.log"
-# filepath = "nqquery_FABI.log"
+BASE_DIR = Path(r"D:\My_Workspace\BILogAnalyzer\input_data\aoaciad070163oacpod-bi-1\domainhome\servers")
+logfile = "NQQuery.log"
 
-""" with open(filepath, 'r') as file_in:
+""" with open(BASE_DIR.joinpath(logfile), mode='r') as file_in:
     i = 0
     for line in file_in:
         if i < 2:
@@ -48,12 +49,22 @@ filepath = "NQQuery_OAC.log"
             break
  """
 
-def one_log_line(filepath, line_start_identifier):
+if not BASE_DIR:
+    BASE_DIR = Path.cwd()
+
+if not logfile:
+    logfile = "NQQuery_OAC.log"
+
+logpath = BASE_DIR / logfile
+
+
+def one_log_line(logpath, line_start_identifier):
     # date_regex = re.compile(r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]", re.I)
     date_regex = re.compile(line_start_identifier, re.I)
     count = 0
 
-    with open(filepath) as nqquery:
+    with open(logpath, 'r') as nqquery:
+        logger.info(f"Reading from file: {logpath}")
 
         for line in nqquery:
             count += 1
@@ -65,7 +76,7 @@ def one_log_line(filepath, line_start_identifier):
             else:
                 yield other, line
         
-    logger.info(f"Count of lines read from the log file - {filepath}: {count}")
+    logger.info(f"Count of lines read from the log file - {logpath}: {count}")
 
     yield EOF, ''
 
@@ -75,7 +86,7 @@ def one_log_msg(line_start_identifier):
     count = 0
     # count_limit = 0
 
-    for kind, content in one_log_line(filepath, line_start_identifier):
+    for kind, content in one_log_line(logpath, line_start_identifier):
         logger.debug(f"*****inside for loop*****\nkind: {kind}")
         # logger.debug(f"count_limit: {count_limit}\n")
 
@@ -104,14 +115,14 @@ def one_log_msg(line_start_identifier):
             
         logger.debug("==================== End of a for-loop iteration ====================\n")
     
-    logger.info(f"Total count of complete log messages read from {filepath}: {count}")
+    logger.info(f"Total count of complete log messages read from {logpath}: {count}")
 
 
-""" 
-obisquerylog_line_start = r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]"
 
-for line in one_log_msg(obisquerylog_line_start):
-        logger.info(f"Log message read")
- """
+# obisquerylog_line_start = r"\[(?:2|1)\d{3}(?:-|\/)(?:(?:0[1-9])|(?:1[0-2]))(?:-|\/)(?:(?:0[1-9])|(?:[1-2][0-9])|(?:3[0-1]))T(?:(?:[0-1][0-9])|(?:2[0-3])):(?:[0-5][0-9]):(?:[0-5][0-9])\.(?:[0-9]{3})[-|\+](?:[0-1][0-9]):(?:[0-5][0-9])\]"
+
+# for line in one_log_msg(obisquerylog_line_start):
+#         logger.info(f"Log message read")
+
 
 

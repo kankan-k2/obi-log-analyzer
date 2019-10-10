@@ -14,7 +14,7 @@ in git-bash: cd /c/Users/kanghosh.ORADEV/.virtualenvs/BILogAnalyzer-g2FLMzg_/Scr
 
 # Local application imports
 import custom_logging
-import logfile_parser
+import obi_logfile_reader
 
 # Standard library imports
 import re
@@ -65,7 +65,7 @@ def generate_psql_df(regex):
     logger.info(f"Generating Physical SQL dataframe.")
     count = 0
 
-    for line in logfile_parser.one_log_msg(obisquerylog_line_start):
+    for line in obi_logfile_reader.one_log_msg(obisquerylog_line_start):
         logger.debug(f"Log message read: {line}")
         psql_match = regex.match(line)
 
